@@ -7,12 +7,15 @@ jobs:
     steps: # steps that comprise the `build` job
       - checkout # checkout the source code to working directory
       - run: 
-          name: "echo my current context"
+          name: "echo the current context"
           command: |
+            mkdir artifacts
             echo "working folder "
             pwd && ls -al
             echo "working branch"
             echo ${CIRCLE_BRANCH}
+      - store_artifacts:
+          path: ./artifacts
       - run:
           name: "authenticate to target org"
           command: |
@@ -45,7 +48,7 @@ workflows:
       - standard-build:
           filters:
             branches: 
-              ignore: /feature.*/
+              only: /feature.*/
       - deploy-uat:
           requires:
             - standard-build
