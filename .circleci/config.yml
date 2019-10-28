@@ -9,13 +9,14 @@ jobs:
       - run: 
           name: "echo the current context"
           command: |
-            mkdir artifacts
+            mkdir ~/artifacts
             echo "working folder "
             pwd && ls -al
             echo "working branch"
             echo ${CIRCLE_BRANCH}
       - store_artifacts:
-          path: ./artifacts
+          path: ./
+          destination: ~/artifacts
       - run:
           name: "authenticate to target org"
           command: |
