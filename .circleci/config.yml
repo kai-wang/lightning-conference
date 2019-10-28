@@ -16,8 +16,9 @@ jobs:
       - run:
           name: "prepare jwt file"
           command: |
-            echo ${jwt} > $PWD/jwt.key
-            awk '{gsub(/\\n/,"\n")}1' $PWD/jwt.key > $PWD/jwt.key
+            echo ${jwt} > $PWD/jwt_temp.key
+            awk '{gsub(/\\n/,"\n")}1' $PWD/jwt_temp.key > $PWD/jwt.key
+            rm $PWD/jwt_temp.key
       - run:
           name: "authorize to org"
           command: | 
