@@ -23,7 +23,7 @@ jobs:
           name: "authorize to org"
           command: | 
             sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username}
-            sfdx force:source:deploy --sourcepath ./force-app --username ${username} --json --loglevel fatal 
+            sfdx force:source:deploy --sourcepath ./force-app --json --loglevel fatal 
 
 
 workflows:
