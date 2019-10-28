@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker: # run the seps with Docker
+      - image: rawdee/sfdx:latest
+    steps: # steps that comprise the `build` job
+      - checkout # checkout the source code to working directory
+      - run: 
+          name: "echo my current context"
+          command: |
+            echo "working folder "
+            pwd
+            echo "working branch"
+            # Alternatively, you can run the environment variable without curly brances;
+            echo ${CIRCLE_BRANCH}
+      - run:
+          name: "prepare jwt file"
+          command: |
+            echo ${jwt} > $PWD/jwt.key
+            cat $PWD/jwt_temp.key
+            awk '{gsub(/\\n/,"\n")}1' $PWD/jwt.key > $PWD/jwt.key
+      - run:
+          name: "authorize to org"
+          command: | 
+            sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username}
+
+
+workflows:
+  version: 2
+  sfdx-cicd:
+    jobs:
+      - build
