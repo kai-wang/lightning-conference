@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  deploy:
+  standard-deploy:
     docker: # run the seps with Docker
       - image: lingjun/sfdx:latest
     working_directory: ~/workspace
@@ -29,13 +29,13 @@ workflows:
   version: 2
   prod-deployment:
     jobs:
-      - build
+      - standard-deploy
         filters:
           branches: 
             only: master
   uat-deployment:
     jobs:
-      - build
+      - standard-deploy
           filters:
             branches:
               only: combined
