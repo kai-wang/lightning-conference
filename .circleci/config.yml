@@ -1,33 +1,49 @@
 version: 2
 jobs:
-  build:
+  standard-build:
     docker: # run the seps with Docker
       - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
     steps: # steps that comprise the `build` job
       - checkout # checkout the source code to working directory
       - run: 
           name: "echo my current context"
           command: |
             echo "working folder "
-            ls -al
+            pwd && ls -al
             echo "working branch"
-            # Alternatively, you can run the environment variable without curly brances;
             echo ${CIRCLE_BRANCH}
       - run:
-          name: "prepare jwt file"
+          name: "authenticate to target org"
           command: |
             echo ${jwt} > $PWD/jwt_temp.key
             awk '{gsub(/\\n/,"\n")}1' $PWD/jwt_temp.key > $PWD/jwt.key
             rm $PWD/jwt_temp.key
-      - run:
-          name: "authorize to org"
-          command: | 
             sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username} --setdefaultdevhubusername --setalias target
+      - run:
+          name: "start deployment"
+          command: | 
             sfdx force:source:deploy -u ${username} --sourcepath ./force-app --json --loglevel fatal 
-
 
 workflows:
   version: 2
-  sfdx-cicd:
+  build-deploy:
     jobs:
-      - build
+      - standard-build:
+          filters:
+            branches: 
+              ignore: /feature.*/
+      - deploy-uat:
+          requires:
+            - standard-build
+          filters:
+            branches:
+              only: combined
+      - deploy-prod:
+          requires:
+            - standard-build
+          filters:
+            branches:
+              only: master
+
+  
