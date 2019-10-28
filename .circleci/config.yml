@@ -17,7 +17,6 @@ jobs:
           name: "prepare jwt file"
           command: |
             echo ${jwt} > $PWD/jwt.key
-            cat $PWD/jwt_temp.key
             awk '{gsub(/\\n/,"\n")}1' $PWD/jwt.key > $PWD/jwt.key
       - run:
           name: "authorize to org"
