@@ -9,7 +9,7 @@ jobs:
           name: "echo my current context"
           command: |
             echo "working folder "
-            pwd
+            ls -al
             echo "working branch"
             # Alternatively, you can run the environment variable without curly brances;
             echo ${CIRCLE_BRANCH}
@@ -23,6 +23,7 @@ jobs:
           name: "authorize to org"
           command: | 
             sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username}
+            sfdx force:source:deploy --sourcepath ./lightning-conference/force-app --json --loglevel fatal
 
 
 workflows:
