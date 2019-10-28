@@ -33,7 +33,7 @@ workflows:
           filters:
             branches: 
               ignore: /feature.*/
-      - deploy-uat
+      - deploy-uat:
           requires:
             - standard-build
           filters:
