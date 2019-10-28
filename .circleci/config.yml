@@ -29,13 +29,13 @@ workflows:
   version: 2
   prod-deployment:
     jobs:
-      - standard-deploy
+      - standard-deploy:
         filters:
           branches: 
             only: master
   uat-deployment:
     jobs:
-      - standard-deploy
+      - standard-deploy:
           filters:
             branches:
               only: combined
