@@ -22,7 +22,7 @@ jobs:
       - run:
           name: "authorize to org"
           command: | 
-            sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username}
+            sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username} --setdefaultdevhubusername --setalias target
             sfdx force:source:deploy --sourcepath ./force-app --json --loglevel fatal 
 
 
