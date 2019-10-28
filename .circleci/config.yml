@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker: # run the seps with Docker
-      - image: rawdee/sfdx:latest
+      - image: lingjun/sfdx:latest
     steps: # steps that comprise the `build` job
       - checkout # checkout the source code to working directory
       - run: 
