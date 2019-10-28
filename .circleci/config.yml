@@ -24,6 +24,19 @@ jobs:
           name: "start deployment"
           command: | 
             sfdx force:source:deploy -u ${username} --sourcepath ./force-app --json --loglevel fatal 
+  deploy-uat:
+    docker: # run the seps with Docker
+      - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
+    steps:
+      - run: echo 'uat specific'
+
+  deploy-prod:
+    docker: # run the seps with Docker
+      - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
+    steps:
+      - run: echo 'prod specific'
 
 workflows:
   version: 2
