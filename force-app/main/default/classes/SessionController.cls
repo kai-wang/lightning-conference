@@ -1,5 +1,5 @@
 public with sharing class SessionController {
-  // Test SonarQube
+  // Test SonarQube custom gate
   @AuraEnabled(cacheable=true)
   public static List<Session__c> getSessions(String searchKey) {
     if (String.isBlank(searchKey)) {
