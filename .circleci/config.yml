@@ -24,7 +24,6 @@ jobs:
             export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
 
   build_and_testing:
-    executor: my-executor # run the seps with executor
     working_directory: ~/workspace
     steps:
       - run:
@@ -46,20 +45,6 @@ jobs:
             sfdx force:apex:test:run --wait 10 --resultformat human --codecoverage --testlevel RunLocalTests
             # Delete Scratch Org
             sfdx force:org:delete --noprompt
-
-  deploy-uat:
-    docker: # run the seps with Docker
-      - image: lingjun/sfdx:latest
-    working_directory: ~/workspace
-    steps:
-      - run: echo 'uat specific'
-
-  deploy-prod:
-    docker: # run the seps with Docker
-      - image: lingjun/sfdx:latest
-    working_directory: ~/workspace
-    steps:
-      - run: echo 'prod specific'
 
 workflows:
   version: 2
