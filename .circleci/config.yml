@@ -41,9 +41,10 @@ workflows:
   version: 2
   prerequesites:
     jobs:
+      - setup_dx
       - prerequesites:
           requires:
-            - setup
+            - setup_dx
           filters:
             branches: 
               only: /feature.*/
