@@ -10,6 +10,8 @@ jobs:
           name: "Decrypt server key"
           command: |
             openssl enc -aes-256-cbc -md sha256 -salt -d -in assets/server.key.enc -out assets/server.key -k $SERVER_KEY_PASSWORD -pbkdf2
+            ls -al
+            ls assets/ -al
       - run:
           name: "Set Environment Variables"
           command: |
@@ -35,9 +37,6 @@ jobs:
             sfdx force:apex:test:run --wait 10 --resultformat human --codecoverage --testlevel RunLocalTests
             # Delete Scratch Org
             sfdx force:org:delete --noprompt
-      - store_artifacts:
-          path: ./
-          destination: ~/artifacts
 
   deploy-uat:
     docker: # run the seps with Docker
