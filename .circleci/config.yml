@@ -1,7 +1,7 @@
 version: 2.1
 defaults: &defaults
   docker:
-    - image: circleci/node:latest
+    - image: lingjun/sfdx:latest
 
 jobs:
   setup_dx:
@@ -9,19 +9,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Salesforce DX
+          name: Decrypet Server Key
           command: |
-            npm install openssl
             openssl enc -aes-256-cbc -md sha256 -salt -d -in assets/server.key.enc -out assets/server.key -k $SERVER_KEY_PASSWORD -pbkdf2
-            export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
-            export SFDX_DOMAIN_RETRY=300
-            npm install sfdx-cli
-            node_modules/sfdx-cli/bin/run --version
-            node_modules/sfdx-cli/bin/run plugins --core
       - run:
           name: Authenticate DevHub
           command: |
-            node_modules/sfdx-cli/bin/run force:auth:jwt:grant --clientid $SF_CONSUMER_KEY --jwtkeyfile $PWD/assets/server.key --username $SF_USERNAME --setdefaultdevhubusername -a HubOrg
+            force:auth:jwt:grant --clientid $SF_CONSUMER_KEY --jwtkeyfile $PWD/assets/server.key --username $SF_USERNAME --setdefaultdevhubusername -a HubOrg
       - persist_to_workspace:
           root: ~/
           paths:
