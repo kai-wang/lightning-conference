@@ -1,0 +1,66 @@
+version: 2
+jobs:
+  standard-build:
+    docker: # run the seps with Docker
+      - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
+    steps: # steps that comprise the `build` job
+      - checkout # checkout the source code to working directory
+      - run: 
+          name: "echo the current context"
+          command: |
+            mkdir ~/artifacts
+            echo "working folder "
+            pwd && ls -al
+            echo "working branch"
+            echo ${CIRCLE_BRANCH}
+      - store_artifacts:
+          path: ./
+          destination: ~/artifacts
+      - run:
+          name: "authenticate to target org"
+          command: |
+            echo ${jwt} > $PWD/jwt_temp.key
+            awk '{gsub(/\\n/,"\n")}1' $PWD/jwt_temp.key > $PWD/jwt.key
+            rm $PWD/jwt_temp.key
+            sfdx force:auth:jwt:grant --clientid ${client_id} --jwtkeyfile $PWD/jwt.key --username ${username} --setdefaultdevhubusername --setalias target
+      - run:
+          name: "start deployment"
+          command: | 
+            sfdx force:source:deploy -u ${username} --sourcepath ./force-app --json --loglevel fatal 
+  deploy-uat:
+    docker: # run the seps with Docker
+      - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
+    steps:
+      - run: echo 'uat specific'
+
+  deploy-prod:
+    docker: # run the seps with Docker
+      - image: lingjun/sfdx:latest
+    working_directory: ~/workspace
+    steps:
+      - run: echo 'prod specific'
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - standard-build:
+          filters:
+            branches: 
+              only: /feature.*/
+      - deploy-uat:
+          requires:
+            - standard-build
+          filters:
+            branches:
+              only: combined
+      - deploy-prod:
+          requires:
+            - standard-build
+          filters:
+            branches:
+              only: master
+
+  
