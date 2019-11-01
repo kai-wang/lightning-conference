@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Install Salesforce DX
           command: |
+            apk update
             openssl enc -aes-256-cbc -md sha256 -salt -d -in assets/server.key.enc -out assets/server.key -k $SERVER_KEY_PASSWORD -pbkdf2
             export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
             export SFDX_DOMAIN_RETRY=300
