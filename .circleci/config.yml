@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Authenticate DevHub
           command: |
-            force:auth:jwt:grant --clientid $SF_CONSUMER_KEY --jwtkeyfile $PWD/assets/server.key --username $SF_USERNAME --setdefaultdevhubusername -a HubOrg
+            sfdx force:auth:jwt:grant --clientid $SF_CONSUMER_KEY --jwtkeyfile $PWD/assets/server.key --username $SF_USERNAME --setdefaultdevhubusername -a HubOrg
       - persist_to_workspace:
           root: ~/
           paths:
