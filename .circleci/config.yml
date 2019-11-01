@@ -22,7 +22,7 @@ jobs:
           name: "Build and Unit Testing"
           command: |
             # Authenticate to the Dev Hub using the server key
-            sfdx force:auth:jwt:grant --setdefaultdevhubusername --clientid $SF_CONSUMER_KEY --jwtkeyfile assets/server.key --username $SF_USERNAME
+            sfdx force:auth:jwt:grant --setdefaultdevhubusername --clientid $SF_CONSUMER_KEY --jwtkeyfile $PWD/assets/server.key --username $SF_USERNAME
             # Create scratch org
             sfdx force:org:create --setdefaultusername --definitionfile config/project-scratch-def.json --wait 10 --durationdays 7
             # Display scratch org details
