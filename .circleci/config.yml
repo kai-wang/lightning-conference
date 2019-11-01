@@ -1,8 +1,12 @@
 version: 1
-jobs:
-  standard-build:
-    docker: # run the seps with Docker
+executors:
+  my-executor:
+    docker:
       - image: lingjun/sfdx:latest
+
+jobs:
+  prerequesites:
+    executor: my-executor: # run the seps with executor
     working_directory: ~/workspace
     steps: # steps that comprise the `build` job
       - checkout # checkout the source code to working directory
@@ -18,6 +22,11 @@ jobs:
             export SFDX_LOG_LEVEL=DEBUG
             export SFDX_DOMAIN_RETRY=600
             export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
+
+  build_and_testing:
+    executor: my-executor: # run the seps with executor
+    working_directory: ~/workspace
+    steps:
       - run:
           name: "Build and Unit Testing"
           command: |
@@ -54,11 +63,17 @@ jobs:
 
 workflows:
   version: 2
-  build-deploy:
+  prerequesites:
     jobs:
-      - standard-build:
+      - prerequesites:
           filters:
             branches: 
+              only: /feature.*/
+      - build_and_unit_testing:
+          requires:
+            - prerequesites
+          filters:
+            branches:
               only: /feature.*/
 
   
